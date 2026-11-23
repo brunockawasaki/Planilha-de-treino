@@ -1,0 +1,16 @@
+{
+  "name": "Gean Martins - Hipertrofia",
+  "short_name": "Hipertrofia",
+  "description": "Treino de hipertrofia com controle de séries e cargas",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1115",
+  "theme_color": "#ff4d4d",
+  "lang": "pt-BR",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
