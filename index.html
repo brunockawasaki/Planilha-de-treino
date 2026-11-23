@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<title>Treino do Gean</title>
+<style>
+:root{--bg:#0f1115;--card:#1a1d24;--card2:#232731;--tx:#f3f4f7;--mu:#9aa1b0;--ac:#ff4d4d;--ac2:#ff8a3d;--ok:#2ecc71}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+header{padding:calc(18px + env(safe-area-inset-top)) 18px 14px;background:linear-gradient(135deg,#ff4d4d,#ff8a3d);color:#fff;border-radius:0 0 26px 26px}
+header h1{margin:0;font-size:22px;letter-spacing:.3px}
+header p{margin:4px 0 0;opacity:.9;font-size:14px}
+nav{position:sticky;top:0;z-index:5;display:flex;gap:8px;padding:12px 14px;background:rgba(15,17,21,.92);backdrop-filter:blur(8px);overflow-x:auto}
+nav button{flex:1;min-width:58px;padding:9px 4px;border:0;border-radius:14px;background:var(--card);color:var(--mu);font-size:13px;font-weight:600;position:relative}
+nav button.on{background:var(--ac);color:#fff}
+nav button.hoje::after{content:"";position:absolute;top:5px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--ac2)}
+nav button.on.hoje::after{background:#fff}
+nav button.feito{box-shadow:inset 0 0 0 2px var(--ok)}
+main{padding:4px 14px 40px;max-width:640px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;margin:8px 2px 12px}
+.top h2{margin:0;font-size:20px}.top small{color:var(--mu);font-size:13px}
+.bar{height:8px;background:var(--card2);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width .3s}
+.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:12px;display:flex;gap:12px;align-items:center;transition:opacity .2s}
+.card.done{opacity:.55}
+.num{flex:none;width:34px;height:34px;border-radius:12px;background:var(--card2);display:grid;place-items:center;font-weight:700;color:var(--ac2)}
+.card.done .num{background:var(--ok);color:#fff}
+.info{flex:1;min-width:0}
+.info b{display:block;font-size:16px;line-height:1.25}
+.card.done .info b{text-decoration:line-through}
+.chips{display:flex;gap:6px;margin:6px 0 10px;flex-wrap:wrap}
+.chips span{font-size:12px;padding:3px 9px;border-radius:20px;background:var(--card2);color:var(--mu)}
+.sets{display:flex;gap:8px;flex-wrap:wrap}
+.sets button{width:42px;height:42px;border-radius:50%;border:2px solid #3a3f4d;background:transparent;color:var(--mu);font-weight:700;font-size:15px}
+.sets button.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.cardio .tick{width:100%;padding:12px;border:2px solid #3a3f4d;border-radius:14px;background:transparent;color:var(--mu);font-size:15px;font-weight:600}
+.cardio .tick.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.foot{text-align:center;margin-top:18px}
+.foot button{background:transparent;border:1px solid #3a3f4d;color:var(--mu);padding:10px 18px;border-radius:12px;font-size:13px}
+.parab{display:none;text-align:center;padding:16px;border-radius:18px;background:var(--ok);color:#fff;font-weight:700;margin-bottom:12px}
+.parab.show{display:block}
+</style>
+</head>
+<body>
+<header><h1>🏋️ Treino do Gean</h1><p>Toque nas bolinhas ao terminar cada série</p></header>
+<nav id="nav"></nav>
+<main>
+ <div class="top"><h2 id="dia"></h2><small id="cont"></small></div>
+ <div class="bar"><i id="prog"></i></div>
+ <div class="parab" id="parab">🎉 Treino concluído! Bom trabalho!</div>
+ <div id="lista"></div>
+ <div class="foot"><button id="limpar">Limpar marcações deste dia</button></div>
+</main>
+<script>
+const DIAS=[{"d": "Segunda", "f": "Pernas", "e": [{"n": "Agachamento", "s": 3, "r": "8/10 reps"}, {"n": "LegPress", "s": 4, "r": "10/12 reps"}, {"n": "Cadeira Extensora", "s": 4, "r": "10/12 reps"}, {"n": "Abdutor", "s": 3, "r": "12 reps"}, {"n": "Adutor", "s": 3, "r": "12 reps"}, {"n": "Mesa Flexora", "s": 3, "r": "12 reps"}, {"n": "Stiff", "s": 3, "r": "12 reps"}, {"n": "Elevação Pélvica", "s": 3, "r": "até a falha"}]}, {"d": "Terça", "f": "Peito e bíceps", "e": [{"n": "Supino Inclinado (váriações)", "s": 4, "r": "8/12 reps"}, {"n": "Crucifixo/Voador", "s": 4, "r": "10/12 reps"}, {"n": "Supino Declinado/Cross Over", "s": 4, "r": "10/12 reps"}, {"n": "Elevação Lateral", "s": 3, "r": "12/15 reps"}, {"n": "Rosca 45º Graus", "s": 4, "r": "8/10 reps"}, {"n": "Scott", "s": 4, "r": "8/10 reps"}, {"n": "Rosca Martelo", "s": 4, "r": "até a falha"}, {"n": "Cardio", "s": 0, "r": "10 min · livre escolha", "cardio": true}]}, {"d": "Quarta", "f": "Costas e tríceps", "e": [{"n": "Pulley Costas", "s": 3, "r": "8/10 reps"}, {"n": "Remada", "s": 3, "r": "8/10 reps"}, {"n": "Pulldown", "s": 4, "r": "10/12 reps"}, {"n": "Voador Invertido", "s": 3, "r": "12/15 reps"}, {"n": "Tríceps Francesa", "s": 4, "r": "8/10 reps"}, {"n": "Pulley Tríceps", "s": 4, "r": "8/10 reps"}, {"n": "Tríceps Testa", "s": 4, "r": "8/10 reps"}, {"n": "Cardio", "s": 0, "r": "12 min · livre escolha", "cardio": true}]}, {"d": "Quinta", "f": "Ombros e braços", "e": [{"n": "Elevação Lateral", "s": 4, "r": "8/10 reps"}, {"n": "Frontal ou Desenvolvimento", "s": 4, "r": "8/10 reps"}, {"n": "Voador Invertido", "s": 4, "r": "8/10 reps"}, {"n": "Encolhimento de Ombro", "s": 4, "r": "até a falha"}, {"n": "Tríceps Francesa", "s": 4, "r": "8/10 reps"}, {"n": "Rosca 45º Graus", "s": 4, "r": "8/10 reps"}, {"n": "Cardio", "s": 0, "r": "15 min · livre escolha", "cardio": true}]}, {"d": "Sexta", "f": "Peito e bíceps", "e": [{"n": "Supino Inclinado (váriações)", "s": 4, "r": "8/12 reps"}, {"n": "Crucifixo/Voador", "s": 4, "r": "10/12 reps"}, {"n": "Supino Declinado/Cross Over", "s": 4, "r": "10/12 reps"}, {"n": "Elevação Lateral", "s": 3, "r": "12/15 reps"}, {"n": "Rosca 45º Graus", "s": 4, "r": "8/10 reps"}, {"n": "Francesa", "s": 4, "r": "8/10 reps"}, {"n": "Scott", "s": 4, "r": "até a falha"}]}];
+const KEY="treino-gean-v1";
+let st=JSON.parse(localStorage.getItem(KEY)||"{}");
+const hojeIdx=(()=>{const d=new Date().getDay();return d>=1&&d<=5?d-1:0})();
+let atual=hojeIdx;
+const save=()=>localStorage.setItem(KEY,JSON.stringify(st));
+function total(di){return DIAS[di].e.reduce((a,x)=>a+(x.cardio?1:x.s),0)}
+function feitos(di){const o=st[di]||{};return Object.values(o).reduce((a,v)=>a+v,0)}
+function nav(){
+ const n=document.getElementById("nav");n.innerHTML="";
+ DIAS.forEach((d,i)=>{const b=document.createElement("button");
+  b.textContent=d.d.slice(0,3);
+  b.className=(i===atual?"on ":"")+(i===hojeIdx?"hoje ":"")+(feitos(i)>=total(i)?"feito":"");
+  b.onclick=()=>{atual=i;render()};n.appendChild(b)});
+}
+function render(){
+ const d=DIAS[atual];
+ document.getElementById("dia").textContent=d.d+" · "+d.f;
+ const L=document.getElementById("lista");L.innerHTML="";
+ const o=st[atual]=st[atual]||{};
+ d.e.forEach((x,i)=>{
+  const c=document.createElement("div");c.className="card"+(x.cardio?" cardio":"");
+  const v=o[i]||0, fim=x.cardio?v>=1:v>=x.s;
+  if(fim)c.classList.add("done");
+  let h=`<div class="num">${fim?"✓":i+1}</div><div class="info"><b>${x.cardio?"🏃 Cardio":x.n}</b><div class="chips">`;
+  h+=x.cardio?`<span>${x.r}</span>`:`<span>${x.s} séries</span><span>${x.r}</span>`;
+  h+=`</div>`;
+  if(x.cardio)h+=`<button class="tick${v?" on":""}">${v?"Feito ✓":"Marcar como feito"}</button>`;
+  else{h+=`<div class="sets">`;for(let s=1;s<=x.s;s++)h+=`<button data-s="${s}" class="${s<=v?"on":""}">${s}</button>`;h+=`</div>`}
+  c.innerHTML=h+`</div>`;
+  c.querySelectorAll(".sets button").forEach(b=>b.onclick=()=>{const s=+b.dataset.s;o[i]=(o[i]===s)?s-1:s;save();render()});
+  const t=c.querySelector(".tick");if(t)t.onclick=()=>{o[i]=v?0:1;save();render()};
+  L.appendChild(c);
+ });
+ const f=feitos(atual),t=total(atual);
+ document.getElementById("prog").style.width=(f/t*100)+"%";
+ document.getElementById("cont").textContent=f+" de "+t+" séries";
+ document.getElementById("parab").classList.toggle("show",f>=t);
+ nav();
+}
+document.getElementById("limpar").onclick=()=>{if(confirm("Limpar as marcações de "+DIAS[atual].d+"?")){st[atual]={};save();render()}};
+render();
+</script>
+</body>
+</html>
